@@ -7,19 +7,37 @@
     </head>
     <body>
 
-        <div id='main'>
-            <h1>{{ title }}</h1>
-            <div v-for='question in questions'>
-                <h3>{{ question.text }}</h3>
-                <span v-for='choice in question.choices'>
-                    <input type='radio' v-model='choice.picked'>
-                    <label>{{ choice.text }}</label>
-                </span>
-                <br>
-            </div>
+        <div id='app'>
+            <survey></survey>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script type="text/x-template" id="survey-template">
+            <div>
+                <h1>{{ title }}</h1>
+                <question v-for='(question, i) in questions' :question='question' answer_val='answers[i].value' :key='i'>
+                </question>
+                <br>
+                <button @click.prevent='submit'>Submit</button>
+            </div>
+        </script>
+
+        <script type='text/x-template' id='question-template'>
+            <div >
+                <h3>{{ question.text }}</h3>
+                <choice v-for='(choice, i) in question.choices' :choice='choice' :answer_val='answer_val' :key='i'>
+                </choice>
+                <br>
+            </div>
+        </script>
+
+        <script type='text/x-template' id='choice-template'>
+            <span>
+                <input type='radio' v-model='answer_val' :value='choice.value'>
+                <label>{{ choice.text }}</label>
+            </span>
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src='app.js'></script>
 
     </body>
