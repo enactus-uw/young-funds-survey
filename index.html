@@ -14,7 +14,12 @@
         <script type="text/x-template" id="survey-template">
             <div>
                 <h1>{{ title }}</h1>
-                <question v-for='(question, i) in questions' :question='question' answer_val='answers[i].value' :key='i'>
+                <question
+                    v-for='(question, i) in questions'
+                    :question='question'
+                    :key='i'
+                    :answer.sync='scores[question.key]'
+                >
                 </question>
                 <br>
                 <button @click.prevent='submit'>Submit</button>
@@ -24,7 +29,13 @@
         <script type='text/x-template' id='question-template'>
             <div >
                 <h3>{{ question.text }}</h3>
-                <choice v-for='(choice, i) in question.choices' :choice='choice' :answer_val='answer_val' :key='i'>
+                <choice
+                    v-for='(choice, i) in question.choices'
+                    :choice='choice'
+                    :key='i'
+                    :answer='answer'
+                    @update:answer='updateAnswer($event)'
+                >
                 </choice>
                 <br>
             </div>
@@ -32,7 +43,10 @@
 
         <script type='text/x-template' id='choice-template'>
             <span>
-                <input type='radio' v-model='answer_val' :value='choice.value'>
+                <input type='radio'
+                    @input="updateAnswer()"
+                    :checked='answer === choice.value'
+                >
                 <label>{{ choice.text }}</label>
             </span>
         </script>
