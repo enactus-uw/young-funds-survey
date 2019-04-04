@@ -7,13 +7,19 @@
     </head>
     <body>
 
-        <div id='app'>
-            <survey></survey>
+        <div id='root'>
+            <app></app>
         </div>
+
+        <script type="text/x-template" id="app-template">
+            <div>
+                <h1>{{ title }}</h1>
+                <survey :products='products' @submit='showResults'></survey>
+            </div>
+        </script>
 
         <script type="text/x-template" id="survey-template">
             <div>
-                <h1>{{ title }}</h1>
                 <question
                     v-for='(question, i) in questions'
                     :question='question'
