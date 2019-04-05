@@ -14,7 +14,19 @@
         <script type="text/x-template" id="app-template">
             <div>
                 <h1>{{ title }}</h1>
-                <survey :products='products' @submit='showResults'></survey>
+                <result v-if='result.show' :product='result.product' @return='handleReturn'>
+                </result>
+
+                <survey v-else :products='products' @submit='handleSubmit'>
+                </survey>
+            </div>
+        </script>
+
+        <script type="text/x-template" id="result-template">
+            <div>
+                <h2>Your ideal investment product is: {{ product.name }}</h2>
+                <p>{{ product.description }}</p>
+                <button @click.prevent='$emit("return")'>Back to survey</button>
             </div>
         </script>
 
@@ -24,6 +36,7 @@
                     v-for='(question, i) in questions'
                     :question='question'
                     :key='i'
+                    :isErrorVisible='isErrorVisible'
                     :answer.sync='scores[question.key]'
                 >
                 </question>
@@ -35,6 +48,7 @@
         <script type='text/x-template' id='question-template'>
             <div >
                 <h3>{{ question.text }}</h3>
+                <div v-if='errorMessage'>{{ errorMessage }}</div>
                 <choice
                     v-for='(choice, i) in question.choices'
                     :choice='choice'

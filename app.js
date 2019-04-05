@@ -1,3 +1,7 @@
+// Start of scope
+(function() {
+'use strict';
+
 // Values representing the parameters of each investment product
 var VALUES = {
     // Represent an unpicked choice
@@ -11,7 +15,7 @@ var VALUES = {
         moderate: 3,
         high: 4,
     },
-    
+
     age: {
         young: 1,
         middleAge: 2,
@@ -28,7 +32,7 @@ var VALUES = {
         none: 1,
         moderate: 2,
         experienced: 3,
-    }
+    },
 }
 
 function Question(text, key, choices) {
@@ -69,39 +73,56 @@ Vue.component('app', {
     data: function() {
         return {
             title: 'Investment Option Evaluator',
-            
+
+            // Products are sorted descending by their earning potentials, so that earnings can be used as
+            // tiebreaker for the best-product algorithm
             products: [
                 Product(
-                    'Individual Stock', 
+                    'Individual Stock',
                     'placeholder',
                     Scores(VALUES.risk.high, VALUES.age.middleAge, VALUES.any, VALUES.experience.experienced),
                 ),
                 Product(
-                    'Index Fund - Exchange Traded Fund', 
+                    'Index Fund - Exchange Traded Fund',
                     'placeholder',
                     Scores(VALUES.risk.low, VALUES.any, VALUES.duration.long, VALUES.experience.none),
                 ),
                 Product(
-                    'GIC', 
-                    'placeholder',
-                    Scores(VALUES.risk.lowest, VALUES.age.old, VALUES.duration.short, VALUES.experience.none),
-                ),
-                Product(
-                    'Bonds', 
+                    'Bonds',
                     'placeholder',
                     Scores(VALUES.risk.low, VALUES.age.old, VALUES.any, VALUES.experience.experienced),
                 ),
-            ]
+                Product(
+                    'GIC',
+                    'placeholder',
+                    Scores(VALUES.risk.lowest, VALUES.age.old, VALUES.duration.short, VALUES.experience.none),
+                ),
+            ],
+
+            result: {
+                show: false,
+                product: null,
+            }
         }
     },
 
     methods: {
-        showResults: function(index) {
-            var product = this.products[index];
-            console.log(product.name);
+        handleSubmit: function(index) {
+            this.result.show = true;
+            this.result.product = this.products[index];
+        },
+
+        handleReturn: function(index) {
+            this.result.show = false;
         }
     }
 })
+
+Vue.component('result', {
+    template: '#result-template',
+
+    props: ['product'],
+});
 
 Vue.component('survey', {
     template: '#survey-template',
@@ -137,26 +158,40 @@ Vue.component('survey', {
                         Choice("I know what I'm doing", VALUES.experience.experienced),
                     ]),
             ],
+
             scores: Scores(VALUES.invalid, VALUES.invalid, VALUES.invalid, VALUES.invalid),
+
+            isErrorVisible: false,
         }
     },
 
     methods: {
         submit: function() {
             console.log(JSON.stringify(this.scores, null, 2));
-
             var diffs = [];
+
             for (var i = 0; i < this.products.length; i++) {
                 var product = this.products[i];
                 var diff = 0;
 
                 for (var j = 0; j < this.questions.length; j++) {
                     var key = this.questions[j].key;
+                    var num_choices = this.questions[j].choices.length;
+
+                    // A question has been left blank, so abort submission and show errors
+                    if (this.scores[key] === VALUES.invalid) {
+                        console.log('ERROR!');
+                        this.isErrorVisible = true;
+                        return;
+                    }
+
                     if (product.scores[key] === VALUES.any) {
-                        // If a product fits any for a category, treat it as if it is the perfect fit
+                        // If a product fits any for a category, treat it as if it is the perfect fit.
                         diff += 0;
                     } else {
-                        diff += Math.abs(this.scores[key] - product.scores[key]);
+                        // Add the difference between the user's choice and the product's score
+                        // for a specific criteria, normalized by # of possible values for that criteria.
+                        diff += Math.abs(this.scores[key] - product.scores[key]) / num_choices;
                     }
                 }
 
@@ -167,6 +202,8 @@ Vue.component('survey', {
             this.$emit('submit', this.find_best_product(diffs))
         },
 
+        // Find the products that best fits the user's answers
+        // Returns index of that product
         find_best_product: function(diffs) {
             var best_idx = 0;
             var best_diff = diffs[best_idx];
@@ -178,7 +215,7 @@ Vue.component('survey', {
                     best_idx = i;
                 }
             }
-            
+
             return best_idx;
         }
     }
@@ -186,7 +223,16 @@ Vue.component('survey', {
 
 Vue.component('question', {
     template: '#question-template',
-    props: ['question', 'answer'],
+    props: ['question', 'answer', 'isErrorVisible'],
+
+    computed: {
+        errorMessage: function() {
+            if (this.isErrorVisible && this.answer === VALUES.invalid) {
+                return "Please pick one of the choices"
+            }
+            return false
+        }
+    },
 
     methods: {
         updateAnswer: function(answer) {
@@ -209,3 +255,6 @@ Vue.component('choice', {
 var app = new Vue({
     el: '#root',
 })
+
+// End of scope
+})();
