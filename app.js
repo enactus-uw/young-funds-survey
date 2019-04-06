@@ -72,8 +72,6 @@ Vue.component('app', {
 
     data: function() {
         return {
-            title: 'Investment Option Evaluator',
-
             // Products are sorted descending by their earning potentials, so that earnings can be used as
             // tiebreaker for the best-product algorithm
             products: [
@@ -117,6 +115,12 @@ Vue.component('app', {
         }
     }
 })
+
+Vue.component('textRow', {
+    template: '#text-row-template',
+
+    props: ['tagName'],
+});
 
 Vue.component('result', {
     template: '#result-template',
@@ -228,7 +232,7 @@ Vue.component('question', {
     computed: {
         errorMessage: function() {
             if (this.isErrorVisible && this.answer === VALUES.invalid) {
-                return "Please pick one of the choices"
+                return "* Please pick one of the choices"
             }
             return false
         }
@@ -243,7 +247,13 @@ Vue.component('question', {
 
 Vue.component('choice', {
     template: '#choice-template',
-    props: ['choice', 'answer'],
+    props: ['choice', 'answer', 'number', 'qkey'],
+
+    computed: {
+        id: function() {
+            return this.qkey.concat(this.number);
+        }
+    },
 
     methods: {
         updateAnswer: function() {

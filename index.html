@@ -2,8 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>Young Funds Investment Recommender</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
 
@@ -11,9 +12,20 @@
             <app></app>
         </div>
 
+        <!--Vue Component Definitions-->
+        <script type="text/x-template" id="text-row-template">
+            <div class='row'>
+                <div class='col-sm'>
+                    <component :is='tagName'>
+                        <slot></slot>
+                    </component>
+                </div>
+            </div>
+        </script>
+
         <script type="text/x-template" id="app-template">
-            <div>
-                <h1>{{ title }}</h1>
+            <div class='container'>
+                <textRow tagName='h1'>Investment Option Recommender</textRow>
                 <result v-if='result.show' :product='result.product' @return='handleReturn'>
                 </result>
 
@@ -24,9 +36,12 @@
 
         <script type="text/x-template" id="result-template">
             <div>
-                <h2>Your ideal investment product is: {{ product.name }}</h2>
-                <p>{{ product.description }}</p>
-                <button @click.prevent='$emit("return")'>Back to survey</button>
+                <textRow tagName='h2'>Your ideal investment product is: <b>{{ product.name }}</b></textRow>
+                <textRow tagName='p'>{{ product.description }}</textRow>
+
+                <button type='button' class='btn btn-primary btn-lg' @click.prevent='$emit("return")'>
+                    Back to survey
+                </button>
             </div>
         </script>
 
@@ -40,35 +55,45 @@
                     :answer.sync='scores[question.key]'
                 >
                 </question>
-                <br>
-                <button @click.prevent='submit'>Submit</button>
+
+                <button type='button' class='btn btn-primary btn-lg' @click.prevent='submit'>
+                    Submit
+                </button>
             </div>
         </script>
 
         <script type='text/x-template' id='question-template'>
-            <div >
-                <h3>{{ question.text }}</h3>
-                <div v-if='errorMessage'>{{ errorMessage }}</div>
-                <choice
-                    v-for='(choice, i) in question.choices'
-                    :choice='choice'
-                    :key='i'
-                    :answer='answer'
-                    @update:answer='updateAnswer($event)'
-                >
-                </choice>
-                <br>
+            <div>
+                <textRow tagName='h4'>{{ question.text }}</textRow>
+                <textRow tagName='small' class='text-danger' v-if='errorMessage'>{{ errorMessage }}</textRow>
+
+                <form>
+                    <div class='form-group'>
+                        <choice
+                            v-for='(choice, i) in question.choices'
+                            :choice='choice'
+                            :key='i'
+                            :qkey='question.key'
+                            :number='i'
+                            :answer='answer'
+                            @update:answer='updateAnswer($event)'
+                        >
+                        </choice>
+                    </div>
+                </form>
             </div>
         </script>
 
         <script type='text/x-template' id='choice-template'>
-            <span>
+            <div class='form-check form-check-inline'>
                 <input type='radio'
-                    @input="updateAnswer()"
+                    class='form-check-input'
+                    :id='id'
                     :checked='answer === choice.value'
+                    @input="updateAnswer()"
                 >
-                <label>{{ choice.text }}</label>
-            </span>
+                <label class='form-check-label' :for='id'>{{ choice.text }}</label>
+            </div>
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
