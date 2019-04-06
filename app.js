@@ -122,6 +122,10 @@ Vue.component('textRow', {
     props: ['tagName'],
 });
 
+Vue.component('btButton', {
+    template: '#btButton-template',
+});
+
 Vue.component('result', {
     template: '#result-template',
 
