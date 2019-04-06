@@ -123,7 +123,7 @@ Vue.component('textRow', {
 });
 
 Vue.component('btButton', {
-    template: '#btButton-template',
+    template: '#bt-button-template',
 });
 
 Vue.component('result', {

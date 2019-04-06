@@ -13,6 +13,8 @@
         </div>
 
         <!--Vue Component Definitions-->
+
+        <!--textRow component: Specific type of text in its own row-->
         <script type="text/x-template" id="text-row-template">
             <div class='row'>
                 <div class='col-sm'>
@@ -23,7 +25,8 @@
             </div>
         </script>
 
-        <script type="text/x-template" id="btButton-template">
+        <!--btButton component: Large bootstrap-style buttons-->
+        <script type="text/x-template" id="bt-button-template">
             <div class>
                 <button type='button' class='btn btn-primary btn-lg' @click.prevent='$emit("press")'>
                     <slot></slot>
@@ -31,6 +34,7 @@
             </div>
         </script>
 
+        <!--app component: Entry point that toggles between the survey and the result-->
         <script type="text/x-template" id="app-template">
             <div class='container'>
                 <textRow tagName='h1' class='text-center'>Investment Option Recommender</textRow>
@@ -44,6 +48,7 @@
             </div>
         </script>
 
+        <!--result component: Displays the investment product recommended by the survey-->
         <script type="text/x-template" id="result-template">
             <div>
                 <textRow tagName='h3' class='text-center'>Your ideal investment product is:</textRow>
@@ -56,6 +61,7 @@
             </div>
         </script>
 
+        <!--survey component: Displays the questions-->
         <script type="text/x-template" id="survey-template">
             <div>
                 <question
@@ -73,10 +79,11 @@
             </div>
         </script>
 
+        <!--question component: Displays a question and its list of choices-->
         <script type='text/x-template' id='question-template'>
             <div>
                 <textRow tagName='h4'>{{ questionText }}</textRow>
-                <textRow tagName='small' class='text-danger' v-if='errorMessage'>{{ errorMessage }}</textRow>
+                <textRow tagName='small' class='text-danger mt-n2' v-if='errorMessage'>{{ errorMessage }}</textRow>
 
                 <form>
                     <div class='form-group'>
@@ -95,6 +102,7 @@
             </div>
         </script>
 
+        <!--choice component: Renders a choice as a radio input-->
         <script type='text/x-template' id='choice-template'>
             <div class='form-check'>
                 <input type='radio'
