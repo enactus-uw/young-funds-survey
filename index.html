@@ -51,6 +51,7 @@
                     v-for='(question, i) in questions'
                     :question='question'
                     :key='i'
+                    :number='i'
                     :isErrorVisible='isErrorVisible'
                     :answer.sync='scores[question.key]'
                 >
@@ -64,7 +65,7 @@
 
         <script type='text/x-template' id='question-template'>
             <div>
-                <textRow tagName='h4'>{{ question.text }}</textRow>
+                <textRow tagName='h4'>{{ questionText }}</textRow>
                 <textRow tagName='small' class='text-danger' v-if='errorMessage'>{{ errorMessage }}</textRow>
 
                 <form>

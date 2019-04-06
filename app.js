@@ -227,9 +227,14 @@ Vue.component('survey', {
 
 Vue.component('question', {
     template: '#question-template',
-    props: ['question', 'answer', 'isErrorVisible'],
+    props: ['question', 'answer', 'isErrorVisible', 'number'],
 
     computed: {
+        questionText: function() {
+            var qnum = this.number + 1;
+            return qnum.toString().concat('. ').concat(this.question.text);
+        },
+
         errorMessage: function() {
             if (this.isErrorVisible && this.answer === VALUES.invalid) {
                 return "* Please pick one of the choices"
