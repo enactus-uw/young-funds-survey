@@ -77,22 +77,31 @@ Vue.component('app', {
             products: [
                 Product(
                     'Individual Stock',
-                    'placeholder',
+                    'Represents a unit of ownership in a specific entity. ' +
+                        'Buying a stock represents an equity stake in that entity. ' +
+                        'This means that you own a piece of that entity and are entitled to the risk and rewards that entity yields.',
                     Scores(VALUES.risk.high, VALUES.age.middleAge, VALUES.any, VALUES.experience.experienced),
                 ),
                 Product(
-                    'Index Fund - Exchange Traded Fund',
-                    'placeholder',
+                    'Index Fund - Exchange Traded Fund (ETF)',
+                    'A pool of money that is invested into multiple different assets in order to provide diversification for investors. ' +
+                        'ETFs are managed by professional portfolio managers for small annual fee. ' +
+                        'ETFs trade directly on the stock exchange very similar to individual stocks.',
                     Scores(VALUES.risk.low, VALUES.any, VALUES.duration.long, VALUES.experience.none),
                 ),
                 Product(
                     'Bonds',
-                    'placeholder',
+                    'An investment into debt of an entity. This is when an investor loans money to an entity for a term period. ' +
+                        'Over that term period the bond issuer is required to pay interest ' +
+                        '(at a rate stated on the bond issue) periodically to the investor. '  +
+                        'At the maturity of the term the bond issuer is required to pay back the initial loan in full to the investor.',
                     Scores(VALUES.risk.low, VALUES.age.old, VALUES.any, VALUES.experience.experienced),
                 ),
                 Product(
-                    'GIC',
-                    'placeholder',
+                    'Guaranteed Investment Certificate (GIC)',
+                        'An extremely low risk investment where the investor deposits a sum of money to a financial institution ' +
+                        '(typically a trust company or chartered bank) for a set term period and receives interest at ' +
+                        'the maturity of the period along with their initial deposit.',
                     Scores(VALUES.risk.lowest, VALUES.age.old, VALUES.duration.short, VALUES.experience.none),
                 ),
             ],
@@ -142,7 +151,7 @@ Vue.component('survey', {
             questions: [
                 Question('What risk level are you comfortable with?', 'risk',
                     [
-                        Choice('Nearly no risk', VALUES.risk.lowest),
+                        Choice('No risk', VALUES.risk.lowest),
                         Choice('Low risk and possible loss of money', VALUES.risk.low),
                         Choice('Moderate risk', VALUES.risk.moderate),
                         Choice('High risk', VALUES.risk.high),
