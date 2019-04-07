@@ -184,7 +184,7 @@ Vue.component('survey', {
 
     methods: {
         submit: function() {
-            console.log(JSON.stringify(this.scores, null, 2));
+            //console.log(JSON.stringify(this.scores, null, 2));
             var diffs = [];
 
             for (var i = 0; i < this.products.length; i++) {
@@ -197,7 +197,7 @@ Vue.component('survey', {
 
                     // A question has been left blank, so abort submission and show errors
                     if (this.scores[key] === VALUES.invalid) {
-                        console.log('ERROR!');
+                        //console.log('ERROR!');
                         this.isErrorVisible = true;
                         return;
                     }
@@ -212,7 +212,7 @@ Vue.component('survey', {
                     }
                 }
 
-                console.log(product.name, diff)
+                //console.log(product.name, diff)
                 diffs.push(diff)
             }
 
